@@ -1,5 +1,23 @@
 from django.db import models
 
+class Category(models.Model):
+    name = models.CharField(
+        max_length=100,
+        verbose_name="Наименование",
+        help_text="Введите наименование категории",
+    )
+    description = models.TextField(
+        verbose_name="Описание", help_text="Введите описание категории"
+    )
+
+    class Meta:
+        verbose_name = "категория"
+        verbose_name_plural = "категории"
+        ordering = ["name"]
+
+    def __str__(self):
+        return f"{self.name}"
+
 
 class Product(models.Model):
     name = models.CharField(
@@ -18,7 +36,7 @@ class Product(models.Model):
         help_text="Загрузите изображение товара",
     )
     category = models.ForeignKey(
-        "Category",
+        Category,
         on_delete=models.SET_NULL,
         verbose_name="Категория",
         help_text="Введите категорию товара",
@@ -46,20 +64,4 @@ class Product(models.Model):
         return f"{self.category} - {self.name}"
 
 
-class Category(models.Model):
-    name = models.CharField(
-        max_length=100,
-        verbose_name="Наименование",
-        help_text="Введите наименование категории",
-    )
-    description = models.TextField(
-        verbose_name="Описание", help_text="Введите описание категории"
-    )
 
-    class Meta:
-        verbose_name = "категория"
-        verbose_name_plural = "категории"
-        ordering = ["name"]
-
-    def __str__(self):
-        return f"{self.name}"
