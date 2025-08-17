@@ -9,8 +9,8 @@ class Command(BaseCommand):
         Product.objects.all().delete()
         Category.objects.all().delete()
 
-        category1 = Category.objects.get_or_create(name='Телевизоры Samsung', description='Все телевизоры с разными технологиями')
-        category2 = Category.objects.get_or_create(name='Телефоны Samsung', description='Все телефоны с разными технологиями')
+        category1, _ = Category.objects.get_or_create(name='Телевизоры Samsung', description='Все телевизоры с разными технологиями')
+        category2, _ = Category.objects.get_or_create(name='Телефоны Samsung', description='Все телефоны с разными технологиями')
 
         products = [
             {'name': 'Samsung TV75', 'description': 'Большой телевизор Samsung', 'category': category1, 'price': 119000.00},
@@ -26,5 +26,6 @@ class Command(BaseCommand):
             else:
                 self.stdout.write(self.style.WARNING(f'Product already exists: {product.name} {product.description}'))
 
+        call_command('loaddata', 'catalog_Category_fixture.json')
         call_command('loaddata', 'catalog_Product_fixture.json')
         self.stdout.write(self.style.SUCCESS('Successfully loaded data from fixture'))

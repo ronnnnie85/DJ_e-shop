@@ -18,6 +18,9 @@ class Category(models.Model):
     def __str__(self):
         return f"{self.name}"
 
+    def natural_key(self):
+        return (self.name,)
+
 
 class Product(models.Model):
     name = models.CharField(
