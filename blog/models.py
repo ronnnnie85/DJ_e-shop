@@ -28,7 +28,7 @@ class Post(models.Model):
         help_text="Укажите признак публикации",
     )
     number_of_views = models.IntegerField(
-        verbose_name="Количество просмотров", help_text="Укажите количество просмотров"
+        default=0, verbose_name="Количество просмотров", help_text="Укажите количество просмотров"
     )
 
     class Meta:
