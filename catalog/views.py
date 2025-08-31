@@ -23,20 +23,8 @@ class ProductsListView(ListView):
     template_name = 'home.html'
     context_object_name = 'products'
 
-# def home(request):
-#     products = Product.objects.all()
-#     context = {'products': products}
-#     return render(request, 'home.html', context)
-
 
 class ProductsDetailView(DetailView):
     model = Product
     template_name = 'product_details.html'
     context_object_name = 'product'
-
-
-
-# def product_details(request, pk):
-#     product = Product.objects.get(pk=pk)
-#     context = {'product': product}
-#     return render(request, 'product_details.html', context)
