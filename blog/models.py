@@ -1,3 +1,22 @@
 from django.db import models
 
-# Create your models here.
+
+class Post(models.Model):
+    header = models.CharField(max_length=200,
+        verbose_name="Заголовок",
+        help_text="Введите заголовок",)
+    content = models.TextField(verbose_name="Содержимое", help_text="Введите содержимое")
+    preview = models.ImageField(
+        upload_to="blog/images/",
+        blank=True,
+        null=True,
+        verbose_name="Превью",
+        help_text="Загрузите превью",
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Дата создания",
+        help_text="Введите дату создания",
+    )
+    publicated = models.BooleanField(verbose_name="Опубликовано", default=False, help_text="Укажите признак публикации")
+    number_of_views = models.IntegerField(verbose_name="Количество просмотров", help_text="Укажите количество просмотров")
