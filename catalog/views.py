@@ -1,11 +1,9 @@
-from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic import TemplateView, ListView, DetailView
 
 from catalog.models import Product
 
 
-# Create your views here.
 class ContactsView(TemplateView):
     template_name = 'contacts.html'
 

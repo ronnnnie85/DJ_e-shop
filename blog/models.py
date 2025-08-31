@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Post(models.Model):
-    header = models.CharField(
+    title = models.CharField(
         max_length=200,
         verbose_name="Заголовок",
         help_text="Введите заголовок",
@@ -37,4 +37,4 @@ class Post(models.Model):
         ordering = ["created_at"]
 
     def __str__(self):
-        return f"{self.header}"
+        return f"{self.title}"
