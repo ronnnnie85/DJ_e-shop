@@ -17,6 +17,12 @@
                     <li class="list-group-item">Цена {{ product.price | default:"На переоценке" }}</li>
                 </ul>
                 <div class="card-body">
+                    <a href="{% url 'catalog:product_update' product.pk %}" class="btn btn-primary">Изменить</a>
+                </div>
+                <div class="card-body">
+                    <a href="{% url 'catalog:product_delete' product.pk %}" class="btn btn-primary">Удалить</a>
+                </div>
+                <div class="card-body">
                     <a href="{% url 'catalog:home' %}" class="card-link">Назад</a>
                 </div>
             </div>

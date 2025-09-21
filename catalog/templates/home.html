@@ -7,6 +7,9 @@
         <h1 class="display-4">Megastore</h1>
         <p class="lead">Megastore - это магазин электроники для вас.</p>
     </div>
+    <nav class="pb-md-4 text-center">
+        <a href="{% url 'catalog:product_create' %}" class="btn btn-primary">Добавить товар</a>
+    </nav>
     <div class="row row-cols-1 row-cols-md-3 g-4">
         {% for product in products %}
             <div class="col">
