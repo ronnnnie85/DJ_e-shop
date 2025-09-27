@@ -29,4 +29,11 @@
         </div>
 
     </div>
+    
+    {% if "catalog.can_unpublish_product" in perms %}
+    <form action="{% url 'catalog:product_not_public' product.pk %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Отменить публикацию</button>
+    </form>
+{% endif %}
 {% endblock %}

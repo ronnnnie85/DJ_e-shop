@@ -1,5 +1,3 @@
-from operator import truediv
-
 from users.models import CustomUser
 from django.core.management import BaseCommand
 
