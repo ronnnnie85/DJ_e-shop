@@ -1,5 +1,8 @@
 from django.db import models
 
+from users.models import CustomUser
+
+
 class Category(models.Model):
     name = models.CharField(
         max_length=100,
@@ -62,6 +65,7 @@ class Product(models.Model):
         default=False,
         help_text="Укажите признак публикации",
     )
+    owner = models.ForeignKey(CustomUser, verbose_name="Владелец", blank=True, null=True, on_delete=models.SET_NULL)
 
     class Meta:
         verbose_name = "продукт"
