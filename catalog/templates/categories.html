@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load my_tags %}
+{% block title %}Каталог{% endblock %}
+
+{% block content %}
+    <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+        <h1 class="display-4">Megastore</h1>
+        <p class="lead">Megastore - это магазин электроники для вас.</p>
+    </div>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for category in categories %}
+            <div class="col">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ category.name }}</h5>
+                        <p class="card-text">{{ category.description | truncatechars:100 }}</p>
+                    </div>
+                    <div class="card-body">
+                        <a href="{% url 'catalog:category_details' category.pk %}" class="card-link">Посмотреть</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

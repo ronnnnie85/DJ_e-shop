@@ -6,7 +6,8 @@ from django.views.generic import TemplateView, ListView, DetailView, CreateView,
 from django.core.cache import cache
 
 from catalog.forms import ProductForm
-from catalog.models import Product
+from catalog.models import Product, Category
+from catalog.services import get_products_category
 from config.settings import CACHE_ENABLED
 
 
@@ -105,3 +106,23 @@ class ProductsPublicatedView(LoginRequiredMixin, View):
         product.save()
 
         return redirect('catalog:home', pk=pk)
+
+
+class CategoryListView(ListView):
+    model = Category
+    template_name = 'categories.html'
+    context_object_name = 'categories'
+
+
+class CategoryDetailView(LoginRequiredMixin, DetailView):
+    model = Category
+    template_name = 'category_details.html'
+    context_object_name = 'category'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        category_id = self.object.id
+
+        context['products'] = get_products_category(category_id)
+        return context
