@@ -3,9 +3,11 @@ from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView, View
+from django.core.cache import cache
 
 from catalog.forms import ProductForm
 from catalog.models import Product
+from config.settings import CACHE_ENABLED
 
 
 class ContactsView(TemplateView):
@@ -24,6 +26,16 @@ class ProductsListView(ListView):
     model = Product
     template_name = 'home.html'
     context_object_name = 'products'
+
+    def get_queryset(self):
+        if not CACHE_ENABLED:
+            return super().get_queryset()
+
+        queryset = cache.get('products_queryset')
+        if not queryset:
+            queryset = super().get_queryset()
+            cache.set('products_queryset', queryset, 60 * 15)
+        return queryset
 
 
 class ProductsDetailView(LoginRequiredMixin, DetailView):
