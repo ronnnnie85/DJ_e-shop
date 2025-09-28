@@ -8,7 +8,9 @@
         <p class="lead">Megastore - это магазин электроники для вас.</p>
     </div>
     <nav class="pb-md-4 text-center">
+    {% if user.is_authenticated %}
         <a href="{% url 'catalog:product_create' %}" class="btn btn-primary">Добавить товар</a>
+    {% endif %}
     </nav>
     <div class="row row-cols-1 row-cols-md-3 g-4">
         {% for product in products %}

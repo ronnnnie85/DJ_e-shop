@@ -1,7 +1,8 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponse
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.http import HttpResponse, HttpResponseForbidden
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView, View
 
 from catalog.forms import ProductForm
 from catalog.models import Product
@@ -38,15 +39,57 @@ class ProductsCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('catalog:home')
 
 
+    def form_valid(self, form):
+        product = form.save()
+        user = self.request.user
+        product.owner = user
+        product.save()
+        return super().form_valid(form)
+
+
 class ProductsUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
     template_name = 'product_form.html'
     success_url = reverse_lazy('catalog:home')
 
+    def dispatch(self, request, *args, **kwargs):
+        product = self.get_object()
+        is_owner = product.owner == request.user
 
-class ProductsDeleteView(LoginRequiredMixin, DeleteView):
+        if not is_owner:
+            return HttpResponseForbidden("У вас нет прав для редактирования этого продукта")
+
+        return super().dispatch(request, *args, **kwargs)
+
+
+class ProductsDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    permission_required = 'catalog.delete_product'
+
     model = Product
     template_name = 'product_confirm_delete.html'
     success_url = reverse_lazy('catalog:home')
     context_object_name = 'product'
+
+    def dispatch(self, request, *args, **kwargs):
+        product = self.get_object()
+        is_owner = product.owner == request.user
+        is_moderator = request.user.groups.filter(name='Модераторы').exists()
+
+        if not (is_owner or is_moderator):
+            return HttpResponseForbidden("У вас нет прав для удаления этого продукта")
+
+        return super().dispatch(request, *args, **kwargs)
+
+
+class ProductsPublicatedView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        product = get_object_or_404(Product, id=pk)
+
+        if not request.user.has_perm('catalog.can_unpublish_product'):
+            return HttpResponseForbidden('У вас нет прав для отмены публикации товара')
+
+        product.publicated = False
+        product.save()
+
+        return redirect('catalog:home', pk=pk)
